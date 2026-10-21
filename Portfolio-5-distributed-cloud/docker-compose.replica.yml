@@ -1,0 +1,33 @@
+Portfolio 5 — Distributed and Cloud Database Exercise
+
+### 1. `portfolio-5-distributed-cloud/docker-compose.replica.yml`
+```yaml
+services:
+  primary:
+    image: bitnami/postgresql:17
+    container_name: shop-pg-primary
+    environment:
+      POSTGRESQL_REPLICATION_MODE: master
+      POSTGRESQL_REPLICATION_USER: repl
+      POSTGRESQL_REPLICATION_PASSWORD: replpass
+      POSTGRESQL_USERNAME: shop
+      POSTGRESQL_PASSWORD: shop
+      POSTGRESQL_DATABASE: shop
+    ports:
+      - "5433:5432"
+
+  replica:
+    image: bitnami/postgresql:17
+    container_name: shop-pg-replica
+    depends_on:
+      - primary
+    environment:
+      POSTGRESQL_REPLICATION_MODE: slave
+      POSTGRESQL_MASTER_HOST: primary
+      POSTGRESQL_MASTER_PORT_NUMBER: 5432
+      POSTGRESQL_REPLICATION_USER: repl
+      POSTGRESQL_REPLICATION_PASSWORD: replpass
+      POSTGRESQL_USERNAME: shop
+      POSTGRESQL_PASSWORD: shop
+    ports:
+      - "5434:5432"

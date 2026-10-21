@@ -1,0 +1,56 @@
+[
+  {
+    "sku": "PHN-SAM-A55",
+    "name": "Samsung Galaxy A55 5G 128GB",
+    "category": "phones",
+    "price": 485000,
+    "inStock": true,
+    "attributes": {
+      "brand": "Samsung",
+      "ramGb": 8,
+      "storageGb": 128,
+      "batteryMah": 5000,
+      "network": "5G",
+      "colour": "Awesome Navy"
+    },
+    "images": ["sam-a55-front.jpg", "sam-a55-back.jpg"],
+    "reviews": [
+      {
+        "customerId": 104,
+        "rating": 5,
+        "text": "Crisp AMOLED display and battery lasts two days in Lagos traffic.",
+        "at": "2026-10-12T10:15:00Z"
+      },
+      {
+        "customerId": 289,
+        "rating": 4,
+        "text": "Fast 5G speeds, though charger brick is sold separately.",
+        "at": "2026-10-18T14:40:00Z"
+      }
+    ]
+  },
+  {
+    "sku": "FSH-KAF-001",
+    "name": "Classic Men's Senator Native Wear",
+    "category": "fashion",
+    "price": 45000,
+    "inStock": true,
+    "attributes": {
+      "brand": "LagosTailor",
+      "size": "XL",
+      "colour": "Royal Blue",
+      "fabric": "100% Cashmere Wool",
+      "sleeveType": "Long Sleeve",
+      "fit": "Tailored"
+    },
+    "images": ["senator-blue-1.jpg"],
+    "reviews": [
+      {
+        "customerId": 512,
+        "rating": 5,
+        "text": "Neat embroidery and accurate sizing.",
+        "at": "2026-10-20T09:00:00Z"
+      }
+    ]
+  }
+]
