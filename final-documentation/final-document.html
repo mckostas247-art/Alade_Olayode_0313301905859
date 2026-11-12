@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MIT 8103 Portfolio — Olayode Alade</title>
+<style>
+  @page { size: A4; margin: 16mm 17mm 15mm 17mm; }
+  body { font-family: Calibri, "Segoe UI", Arial, sans-serif; font-size: 10.3pt; line-height: 1.32; color: #111; margin: 0; }
+  h1 { font-size: 15pt; margin: 0 0 2px; }
+  .sub { color: #444; font-size: 9.6pt; margin-bottom: 8px; }
+  h2 { font-size: 11.6pt; margin: 11px 0 4px; border-bottom: 1px solid #bbb; padding-bottom: 1px; }
+  p { margin: 0 0 5px; }
+  table { border-collapse: collapse; width: 100%; margin: 3px 0 6px; font-size: 9.2pt; }
+  th, td { border: 1px solid #aaa; padding: 2.5px 5px; vertical-align: top; text-align: left; }
+  th { background: #eee; }
+  code { font-family: Consolas, monospace; font-size: 8.8pt; }
+  .meta td { border: none; padding: 0 10px 1px 0; font-size: 9.6pt; }
+  figure { margin: 4px 0 6px; text-align: center; }
+  figure img { max-width: 78%; border: 1px solid #ccc; }
+  figcaption { font-size: 8.8pt; color: #444; }
+  ul { margin: 0 0 5px 18px; padding: 0; }
+  li { margin-bottom: 2px; }
+  .refs p { padding-left: 18px; text-indent: -18px; font-size: 9.2pt; margin-bottom: 2px; }
+  .todo { background: #ffef9e; }
+</style>
+</head>
+<body>
+
+<h1>MIT 8103 Advanced Database Systems — Practical Database Portfolio</h1>
+<div class="sub">Miva Open University · 2026/2027 Academic Session, First Semester (September 2026 cohort) · Continuous Assessment</div>
+<table class="meta">
+<tr><td><b>Student</b></td><td>Olayode Alade</td><td><b>Matric number</b></td><td>0313301905859</td></tr>
+<tr><td><b>Email</b></td><td>o.alade5859@miva.edu.ng</td><td><b>Date</b></td><td>November 2026</td></tr>
+<tr><td><b>Repository</b></td><td colspan="3">https://github.com/mckostas247-art/AdvancedDatabase8103CA (private; assessor access: <span class="todo">[assessor GitHub handle added as collaborator / access on request]</span>)</td></tr>
+</table>
+
+<h2>1. Selected case study: NaijaCart Retail Ltd (e-commerce platform)</h2>
+<p>NaijaCart Retail Ltd is a simulated Nigerian online retailer, based in Lagos and delivering nationwide. I chose the brief's e-commerce case and used it for all five activities. The database serves customers (browsing, ordering, paying, tracking deliveries), warehouse staff (stock and dispatch), the finance team (payment reconciliation and reversals) and the web application backend. It stores customers, addresses, a category hierarchy, products, inventory, orders, order lines, payments and deliveries in PostgreSQL 17, and a flexible product catalogue in MongoDB 7. Everything runs in Docker, so every result below can be reproduced from the repository.</p>
+
+<h2>2. The five portfolio activities</h2>
+<table>
+<tr><th style="width:17%">Activity</th><th style="width:42%">What I built</th><th>Evidence and key result</th></tr>
+<tr><td><b>1. Design and modelling</b></td>
+<td>Nine-table schema in 3NF with named primary, foreign, unique and check constraints; a partial unique index allows one default address per customer. <code>order_items.unit_price</code> keeps the historical price; <code>orders.total</code> is a deliberate, transaction-maintained denormalisation.</td>
+<td><code>schema.sql</code>, ER diagram (Figure 1), <code>constraints.txt</code>. Six deliberate rule-breaking inserts were each refused by the intended constraint (<code>constraint-tests.txt</code>).</td></tr>
+<tr><td><b>2. Query optimisation</b></td>
+<td>Seeded 50,000 customers, 500,000 orders and 1,538,156 order lines; three business queries measured with <code>EXPLAIN (ANALYZE, BUFFERS)</code> before and after indexing.</td>
+<td>Query 1: composite index <code>(customer_id, placed_at DESC)</code> cut 38.48 ms → 0.53 ms and 4,901 → 29 buffers. Query 2: a partial index helped only slightly (median 399 → 269 ms) because the seeded dates were scattered (correlation 0.000); a materialized daily summary brought it to a median of 9.3 ms with identical results.</td></tr>
+<tr><td><b>3. Transactions and concurrency</b></td>
+<td>Atomic place-order transaction with commit and constraint-triggered rollback; four two-session races on the last unit in stock; isolation-level comparison; durability test.</td>
+<td>Without a lock, <b>one unit was sold twice</b> (orders 500003 and 500004). The CHECK constraint, an optimistic version check (<code>UPDATE 0</code>) and <code>SELECT … FOR UPDATE</code> (Session 2 waited 2.6 s) each prevented it. A hard <code>docker kill</code> was followed by WAL recovery with committed orders intact.</td></tr>
+<tr><td><b>4. NoSQL</b></td>
+<td>Product catalogue as MongoDB documents with category-specific <code>attributes</code> and embedded reviews; compound and text indexes; aggregation pipeline.</td>
+<td>21 documents loaded; nested-attribute filter, text search and per-category rating averages work; <code>explain()</code> shows <code>IXSCAN</code> on <code>category_1_attributes.brand_1</code>. Orders and stock stay in PostgreSQL for ACID guarantees.</td></tr>
+<tr><td><b>5. Distributed and cloud</b></td>
+<td>PostgreSQL primary and streaming replica in Docker; manual failover; sharding, CAP and cloud design.</td>
+<td>Replica streaming asynchronously with 4 ms replay lag; it refused writes. After the primary was stopped, <code>pg_promote()</code> made the replica writable and committed orders survived; order IDs jumped 6 → 34 (sequence pre-logging). Design: hash sharding on <code>customer_id</code>; checkout CP, catalogue AP.</td></tr>
+</table>
+
+<figure>
+<img src="../Portfolio-1-database-design/er-diagram.png" alt="Entity-relationship diagram of the nine NaijaCart tables">
+<figcaption>Figure 1. ER diagram generated from the live PostgreSQL schema (<code>Portfolio-1-database-design/er-diagram.png</code>).</figcaption>
+</figure>
+
+<p><b>Screenshots and evidence.</b> Each portfolio folder has a <code>README.md</code> explaining how the activity was implemented and tested, the raw output files (<code>results/</code>, <code>plans/</code>, transcripts) and a <code>screenshots/</code> folder with 22 images. The images are the captured terminal output rendered to PNG; each image's title bar names the output file it shows.</p>
+
+<h2>3. Individual technical reflection</h2>
+<p><b>Design choices.</b> I kept money in <code>NUMERIC(12,2)</code> and stock rules in the database rather than only in application code, and the concurrency tests justified that: in the race where the application logic was wrong, the <code>quantity &gt;= 0</code> constraint was the only thing that stopped an oversell. For the catalogue I used MongoDB only where the data really varies (product attributes and reviews), and kept everything financial in PostgreSQL.</p>
+<p><b>Challenges.</b> The large seed first failed because my C: drive ran out of space and Docker's disk became read-only; I had to free space and restart Docker before any measurement was possible. My first Query 2 index did not give the improvement I expected, and the plans showed why: the index found the right orders but they were spread over almost every page, and most of the cost was the full scan of order lines. A covering index was ignored by the planner. The bitnami PostgreSQL images had been withdrawn from Docker Hub, so the replica setup needed the legacy image and a superuser password. My MongoDB aggregation failed because <code>$round</code> cannot be used inside <code>$group</code>. My first optimistic-locking run was not a genuine race, so I re-ran it until both sessions had read the same version.</p>
+<p><b>Lessons learned.</b> Measure, then repeat the measurement: single timings for Query 2 varied more than the effect I was testing. An index only helps if it avoids reading most of the table, and that depends on how the data is physically laid out, which <code>pg_stats.correlation</code> shows. For dashboard-style aggregates, a pre-aggregated summary beats indexing, at the cost of freshness. Failover is not free: committed-but-unshipped transactions can be lost under asynchronous replication, and IDs can have gaps. In my day job I work with production databases, and these are the habits I will take back: reading buffers as well as time in plans, testing races with two real sessions, and rehearsing failover before it is needed.</p>
+
+<h2>4. References</h2>
+<div class="refs">
+<p>Amazon Web Services. (2025). <i>Multi-AZ deployments for high availability</i>. Amazon RDS User Guide. https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html</p>
+<p>Docker, Inc. (2025). <i>postgres</i> (17-alpine) and <i>mongo</i> (7) Docker Official Images; Bitnami. <i>bitnamilegacy/postgresql</i> (17). Docker Hub. https://hub.docker.com</p>
+<p>Federal Republic of Nigeria. (2023). <i>Nigeria Data Protection Act, 2023</i>.</p>
+<p>Miva Open University. (2026). <i>MIT 8103 Advanced Database Systems</i> [Course material and continuous assessment brief].</p>
+<p>Mermaid. (2024). <i>Mermaid</i> (Version 10.9.1) [Diagramming library]. https://mermaid.js.org</p>
+<p>MongoDB, Inc. (2024). <i>MongoDB manual</i> (Version 7.0). https://www.mongodb.com/docs/v7.0/</p>
+<p>PostgreSQL Global Development Group. (2024). <i>PostgreSQL 17 documentation</i>. https://www.postgresql.org/docs/17/</p>
+<p>All data in the repository is synthetic: sample rows written for the case study and bulk rows generated with PostgreSQL <code>generate_series</code>. No external datasets were used.</p>
+</div>
+
+<h2>5. AI use declaration</h2>
+<table>
+<tr><th style="width:20%">Tool</th><th>What it was used for</th></tr>
+<tr><td><span class="todo">[name of the AI tool used for the first drafts]</span></td><td>Generating first drafts of the SQL scripts, MongoDB scripts and portfolio READMEs.</td></tr>
+<tr><td>Claude (Anthropic), through Claude Code</td><td>Running all five activities on my machine in Docker and capturing the output; finding and fixing errors (formatting left in the SQL files, the <code>$round</code> aggregation bug, the withdrawn replica image); running the Query 2 index experiments, the durability test and the failover test; generating the ER diagram and rendering the output files as screenshots; rewriting the README files for all five activities from the real results, and drafting this document.</td></tr>
+</table>
+<p><b>How I reviewed and verified the output.</b> I ran the repository's commands myself and checked that the figures in each README and in this document match the output files in the repository (<code>plans/</code>, <code>results/</code> and the transcripts). I corrected statements that the real runs contradicted, such as the earlier estimated timings, and I have read every section so that I can explain the design, the results and the trade-offs if selected for verification. I remain responsible for the accuracy of this submission.</p>
+
+</body>
+</html>

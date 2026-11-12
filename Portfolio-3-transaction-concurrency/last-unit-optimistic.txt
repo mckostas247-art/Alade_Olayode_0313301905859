@@ -1,12 +1,12 @@
-== Demo C: optimistic locking, both read version 0, update WHERE version = 0. Stock 1.
+== Demo C: optimistic locking. Stock 1, version 0. Both sessions read, then update WHERE version = 0. 2026-11-12 08:02
 == Session 1
-select 'SX reads' as step, quantity, version from inventory where product_id = 1;
-   step   | quantity | version 
-----------+----------+---------
- SX reads |        1 |       0
+select 'S1 reads' as step, clock_timestamp()::time(2) as at, quantity, version from inventory where product_id = 1;
+   step   |     at      | quantity | version 
+----------+-------------+----------+---------
+ S1 reads | 07:02:37.95 |        1 |       0
 (1 row)
 
-select pg_sleep(1);
+select pg_sleep(4);
  pg_sleep 
 ----------
  
@@ -14,14 +14,20 @@ select pg_sleep(1);
 
 update inventory set quantity = quantity - 1, version = version + 1 where product_id = 1 and version = 0;
 UPDATE 1
-== Session 2
-select 'SX reads' as step, quantity, version from inventory where product_id = 1;
-   step   | quantity | version 
-----------+----------+---------
- SX reads |        0 |       1
+select 'S1 after update' as step, clock_timestamp()::time(2) as at, quantity, version from inventory where product_id = 1;
+      step       |     at      | quantity | version 
+-----------------+-------------+----------+---------
+ S1 after update | 07:02:41.99 |        0 |       1
 (1 row)
 
-select pg_sleep(3);
+== Session 2 (started 1.5 s after Session 1)
+select 'S2 reads' as step, clock_timestamp()::time(2) as at, quantity, version from inventory where product_id = 1;
+   step   |     at      | quantity | version 
+----------+-------------+----------+---------
+ S2 reads | 07:02:41.48 |        1 |       0
+(1 row)
+
+select pg_sleep(4);
  pg_sleep 
 ----------
  
@@ -29,3 +35,9 @@ select pg_sleep(3);
 
 update inventory set quantity = quantity - 1, version = version + 1 where product_id = 1 and version = 0;
 UPDATE 0
+select 'S2 after update' as step, clock_timestamp()::time(2) as at, quantity, version from inventory where product_id = 1;
+      step       |     at      | quantity | version 
+-----------------+-------------+----------+---------
+ S2 after update | 07:02:45.48 |        0 |       1
+(1 row)
+

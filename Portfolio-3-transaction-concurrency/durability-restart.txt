@@ -1,0 +1,33 @@
+== Durability check, 2026-11-12 07:59: read committed rows, kill the container, start it, read again
+== Before:
+ order_id | customer_id | status |   total   
+----------+-------------+--------+-----------
+   500003 |           3 | PAID   | 485000.00
+   500004 |           4 | PAID   | 485000.00
+(2 rows)
+
+ product_id | quantity | version 
+------------+----------+---------
+          1 |        5 |       1
+(1 row)
+
+== docker kill shop-postgres (no clean shutdown):
+shop-postgres
+ Container shop-postgres Started 
+== Server log after restart:
+2026-11-12 07:00:08.657 UTC [29] LOG:  database system was not properly shut down; automatic recovery in progress
+2026-11-12 07:00:08.678 UTC [29] LOG:  redo starts at 0/2444BB70
+2026-11-12 07:00:08.679 UTC [29] LOG:  redo done at 0/2444BC78 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2026-11-12 07:00:08.712 UTC [1] LOG:  database system is ready to accept connections
+== After:
+ order_id | customer_id | status |   total   
+----------+-------------+--------+-----------
+   500003 |           3 | PAID   | 485000.00
+   500004 |           4 | PAID   | 485000.00
+(2 rows)
+
+ product_id | quantity | version 
+------------+----------+---------
+          1 |        5 |       1
+(1 row)
+

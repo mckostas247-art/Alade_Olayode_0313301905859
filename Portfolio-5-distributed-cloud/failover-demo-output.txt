@@ -1,0 +1,33 @@
+== Failover demo, 2026-11-12 08:00. Primary stopped; replica promoted by hand.
+== 1. Replica before failover: in recovery?
+t
+ last_order 
+------------
+          6
+(1 row)
+
+== 2. docker stop shop-pg-primary
+shop-pg-primary
+== 3. Writes on the replica while the primary is down:
+ERROR:  cannot execute INSERT in a read-only transaction
+== 4. Promote the replica (superuser):
+ pg_promote 
+------------
+ t
+(1 row)
+
+== 5. After promotion: in recovery?
+f
+== 6. Write on the promoted node:
+ order_id | status |  total  
+----------+--------+---------
+       34 | PAID   | 2000.00
+(1 row)
+
+INSERT 0 1
+== 7. Committed order 6 from before the failover is still there:
+ order_id | status |   total   
+----------+--------+-----------
+        6 | PAID   | 125000.00
+(1 row)
+
