@@ -29,9 +29,9 @@ The jump from order 6 to order 34 happens because PostgreSQL WAL-logs sequence v
 
 ## Commands
 ```bash
-docker compose -f Portfolio-5-distributed-cloud/docker-compose.replica.yml up -d
-docker compose -f Portfolio-5-distributed-cloud/docker-compose.replica.yml exec -e PGPASSWORD=postgrespass primary \
+docker compose -f Alade_Olayode_0313301905859_Portfolio-5-distributed-cloud/docker-compose.replica.yml up -d
+docker compose -f Alade_Olayode_0313301905859_Portfolio-5-distributed-cloud/docker-compose.replica.yml exec -e PGPASSWORD=postgrespass primary \
   psql -h 127.0.0.1 -U postgres -d shop -c "SELECT client_addr, state, sync_state, replay_lag FROM pg_stat_replication;"
-docker compose -f Portfolio-5-distributed-cloud/docker-compose.replica.yml exec -e PGPASSWORD=shop replica \
+docker compose -f Alade_Olayode_0313301905859_Portfolio-5-distributed-cloud/docker-compose.replica.yml exec -e PGPASSWORD=shop replica \
   psql -U shop -d shop -c "SELECT pg_is_in_recovery();"
 ```

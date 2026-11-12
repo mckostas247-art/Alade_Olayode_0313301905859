@@ -26,7 +26,7 @@ The MongoDB product catalogue (Portfolio 4) would run as a three-node replica se
 
 ## How I implemented it
 1. Wrote `docker-compose.replica.yml` with a PostgreSQL 17 primary (port 5433) and streaming replica (port 5434). The `bitnami/postgresql` images have been withdrawn from Docker Hub, so the file uses `bitnamilegacy/postgresql:17`. I also set a password for the `postgres` superuser on the primary, because reading the full `pg_stat_replication` view and calling `pg_promote()` both require superuser rights.
-2. Started both nodes, loaded `../Portfolio-1-database-design/schema.sql` and `../Portfolio-1-database-design/sample-data.sql` on the primary, and checked the replication status.
+2. Started both nodes, loaded `../Alade_Olayode_0313301905859_Portfolio-1-database-design/schema.sql` and `../Alade_Olayode_0313301905859_Portfolio-1-database-design/sample-data.sql` on the primary, and checked the replication status.
 3. Wrote on the primary and read on the replica, then attempted a write on the replica.
 4. Ran a manual failover: stopped the primary and promoted the replica.
 5. Wrote the scaling design in `sharding-design.md`.
@@ -40,6 +40,6 @@ The MongoDB product catalogue (Portfolio 4) would run as a three-node replica se
 
 To rebuild a clean primary and replica after the failover test:
 ```bash
-docker compose -f Portfolio-5-distributed-cloud/docker-compose.replica.yml down
-docker compose -f Portfolio-5-distributed-cloud/docker-compose.replica.yml up -d
+docker compose -f Alade_Olayode_0313301905859_Portfolio-5-distributed-cloud/docker-compose.replica.yml down
+docker compose -f Alade_Olayode_0313301905859_Portfolio-5-distributed-cloud/docker-compose.replica.yml up -d
 ```

@@ -37,8 +37,8 @@ All tables satisfy **Third Normal Form (3NF)**:
 2. Wrote the DDL in `schema.sql`: `NUMERIC(12,2)` for money, `TIMESTAMPTZ` for timestamps, identity primary keys, and an explicit name for every `FOREIGN KEY`, `UNIQUE` and `CHECK` constraint so that error messages identify the rule that was broken.
 3. Loaded the schema and the sample rows:
    ```bash
-   docker compose exec -T db psql -U shop -d shop -v ON_ERROR_STOP=1 < Portfolio-1-database-design/schema.sql
-   docker compose exec -T db psql -U shop -d shop -v ON_ERROR_STOP=1 < Portfolio-1-database-design/sample-data.sql
+   docker compose exec -T db psql -U shop -d shop -v ON_ERROR_STOP=1 < Alade_Olayode_0313301905859_Portfolio-1-database-design/schema.sql
+   docker compose exec -T db psql -U shop -d shop -v ON_ERROR_STOP=1 < Alade_Olayode_0313301905859_Portfolio-1-database-design/sample-data.sql
    ```
 4. Exported the table list and every named constraint from `pg_constraint` (`constraints.txt`, `constraints.png`).
 5. Generated the ER diagram from the live schema (`information_schema` and `pg_constraint`) as Mermaid source (`er-diagram.mmd`) and rendered it to `er-diagram.png`, so the diagram matches the database exactly.

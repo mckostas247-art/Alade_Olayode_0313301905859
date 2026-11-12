@@ -19,10 +19,10 @@
 
 ## Repository Structure
 ```text
-AdvancedDatabase8103CA/
+Alade_Olayode_0313301905859/
 ├── README.md
 ├── docker-compose.yml
-├── Portfolio-1-database-design/
+├── Alade_Olayode_0313301905859_Portfolio-1-database-design/
 │   ├── README.md
 │   ├── constraint-tests.txt
 │   ├── constraints.png
@@ -32,7 +32,7 @@ AdvancedDatabase8103CA/
 │   ├── sample-data.sql
 │   ├── schema.sql
 │   └── screenshots/  (1 PNG, captured output)
-├── Portfolio-2-query-optimization/
+├── Alade_Olayode_0313301905859_Portfolio-2-query-optimization/
 │   ├── README.md
 │   ├── index-log.txt
 │   ├── q1.sql
@@ -61,7 +61,7 @@ AdvancedDatabase8103CA/
 │   │   ├── q2.txt
 │   │   └── q3.txt
 │   └── screenshots/  (10 PNG, captured output)
-├── Portfolio-3-transaction-concurrency/
+├── Alade_Olayode_0313301905859_Portfolio-3-transaction-concurrency/
 │   ├── README.md
 │   ├── durability-restart.txt
 │   ├── isolation-demo-output.txt
@@ -74,7 +74,7 @@ AdvancedDatabase8103CA/
 │   ├── place-order-demo-output.txt
 │   ├── place-order-demo.sql
 │   └── screenshots/  (7 PNG, captured output)
-├── Portfolio-4-nosql/
+├── Alade_Olayode_0313301905859_Portfolio-4-nosql/
 │   ├── README.md
 │   ├── document-model.json
 │   ├── load-output.txt
@@ -82,7 +82,7 @@ AdvancedDatabase8103CA/
 │   ├── queries-output.txt
 │   ├── queries.js
 │   └── screenshots/  (2 PNG, captured output)
-├── Portfolio-5-distributed-cloud/
+├── Alade_Olayode_0313301905859_Portfolio-5-distributed-cloud/
 │   ├── README.md
 │   ├── docker-compose.replica.yml
 │   ├── failover-demo-output.txt
@@ -100,8 +100,8 @@ AdvancedDatabase8103CA/
 Requires Docker. From the repository root:
 ```bash
 docker compose up -d db
-docker compose exec -T db psql -U shop -d shop -v ON_ERROR_STOP=1 < Portfolio-1-database-design/schema.sql
-docker compose exec -T db psql -U shop -d shop -v ON_ERROR_STOP=1 < Portfolio-1-database-design/sample-data.sql
+docker compose exec -T db psql -U shop -d shop -v ON_ERROR_STOP=1 < Alade_Olayode_0313301905859_Portfolio-1-database-design/schema.sql
+docker compose exec -T db psql -U shop -d shop -v ON_ERROR_STOP=1 < Alade_Olayode_0313301905859_Portfolio-1-database-design/sample-data.sql
 ```
 Each portfolio folder's `README.md` gives the commands for that activity under **How I implemented it**, and the results under **How I tested it**. Portfolio 2's seed creates about 2.1 million rows and needs a few minutes and about 1 GB of free disk.
 

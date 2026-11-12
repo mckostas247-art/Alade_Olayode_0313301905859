@@ -25,8 +25,8 @@ NaijaCart uses **Polyglot Persistence**:
 4. Wrote `queries.js` with four checks: a filter on a nested attribute, a text search, an aggregation of ratings per category, and an `explain()` to confirm the compound index is used.
 5. Ran both scripts and saved the output:
    ```bash
-   docker exec -i shop-mongo mongosh shop --quiet < Portfolio-4-nosql/load.js > Portfolio-4-nosql/load-output.txt
-   docker exec -i shop-mongo mongosh shop --quiet < Portfolio-4-nosql/queries.js > Portfolio-4-nosql/queries-output.txt
+   docker exec -i shop-mongo mongosh shop --quiet < Alade_Olayode_0313301905859_Portfolio-4-nosql/load.js > Alade_Olayode_0313301905859_Portfolio-4-nosql/load-output.txt
+   docker exec -i shop-mongo mongosh shop --quiet < Alade_Olayode_0313301905859_Portfolio-4-nosql/queries.js > Alade_Olayode_0313301905859_Portfolio-4-nosql/queries-output.txt
    ```
 
 ## How I tested it
