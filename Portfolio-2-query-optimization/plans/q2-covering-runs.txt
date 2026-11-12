@@ -1,0 +1,14 @@
+-- Experiment: covering index for Query 2, 2026-11-12 07:47
+CREATE INDEX
+VACUUM
+ index_size 
+------------
+ 73 MB
+(1 row)
+
+-- five runs with the covering index:
+Execution Time: 567.396 ms
+Execution Time: 157.921 ms
+Execution Time: 157.504 ms
+Execution Time: 266.566 ms
+Execution Time: 306.417 ms

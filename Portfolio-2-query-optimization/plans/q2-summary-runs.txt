@@ -1,0 +1,28 @@
+-- Experiment: daily summary for Query 2, 2026-11-12 07:48
+-- 1. covering index on order_items was ignored by the planner (see q2-covering-runs.txt); dropped:
+DROP INDEX
+-- 2. build the summary (timed):
+Timing is on.
+SELECT 73181
+Time: 4827.639 ms (00:04.828)
+CREATE INDEX
+Time: 96.154 ms
+ summary_rows |  size   
+--------------+---------
+        73181 | 7416 kB
+(1 row)
+
+-- 3. refresh cost (timed):
+Timing is on.
+REFRESH MATERIALIZED VIEW
+Time: 5531.505 ms (00:05.532)
+-- 4. five runs of Query 2 against the summary:
+Execution Time: 6.897 ms
+Execution Time: 6.738 ms
+Execution Time: 9.303 ms
+Execution Time: 13.848 ms
+Execution Time: 13.404 ms
+-- 5. Same top 10 as the original query?
+-- Original window: placed_at >= NOW() - 30 days (starts at the current time of day). Summary window: whole days.
+-- Against the original as written: product order and totals differ slightly (the summary includes the rest of day 30).
+-- Against the original with the window starting at midnight, (NOW() - INTERVAL '30 days')::date: identical output.

@@ -1,0 +1,33 @@
+                                                                             QUERY PLAN                                                                             
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=1964.53..1964.55 rows=10 width=92) (actual time=12.835..12.842 rows=10 loops=1)
+   Buffers: shared hit=643
+   ->  Sort  (cost=1964.53..1965.03 rows=200 width=92) (actual time=12.830..12.836 rows=10 loops=1)
+         Sort Key: (sum(s.revenue)) DESC
+         Sort Method: top-N heapsort  Memory: 26kB
+         Buffers: shared hit=643
+         ->  HashAggregate  (cost=1957.20..1960.20 rows=200 width=92) (actual time=12.538..12.610 rows=200 loops=1)
+               Group Key: p.product_id
+               Batches: 1  Memory Usage: 160kB
+               Buffers: shared hit=640
+               ->  Hash Join  (cost=580.98..1774.25 rows=24394 width=68) (actual time=1.461..9.089 rows=6184 loops=1)
+                     Hash Cond: (s.product_id = p.product_id)
+                     Buffers: shared hit=640
+                     ->  Bitmap Heap Scan on mv_daily_product_sales s  (cost=573.48..1701.36 rows=24394 width=48) (actual time=1.146..6.016 rows=6184 loops=1)
+                           Recheck Cond: (sales_day >= ((now() - '30 days'::interval))::date)
+                           Heap Blocks: exact=610
+                           Buffers: shared hit=637
+                           ->  Bitmap Index Scan on idx_mv_daily_product_sales  (cost=0.00..567.38 rows=24394 width=0) (actual time=0.977..0.977 rows=6184 loops=1)
+                                 Index Cond: (sales_day >= ((now() - '30 days'::interval))::date)
+                                 Buffers: shared hit=27
+                     ->  Hash  (cost=5.00..5.00 rows=200 width=28) (actual time=0.285..0.286 rows=200 loops=1)
+                           Buckets: 1024  Batches: 1  Memory Usage: 20kB
+                           Buffers: shared hit=3
+                           ->  Seq Scan on products p  (cost=0.00..5.00 rows=200 width=28) (actual time=0.087..0.120 rows=200 loops=1)
+                                 Buffers: shared hit=3
+ Planning:
+   Buffers: shared hit=161
+ Planning Time: 3.229 ms
+ Execution Time: 13.404 ms
+(29 rows)
+
