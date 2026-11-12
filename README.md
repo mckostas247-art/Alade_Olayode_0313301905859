@@ -4,7 +4,7 @@
 **Institution:** Miva Open University · School of Postgraduate Studies  
 **Session:** 2026/2027 Academic Session (First Semester — September 2026 Cohort)  
 **Email:** o.alade5859@miva.edu.ng  
-**GitHub repository:** https://github.com/mckostas247-art/AdvancedDatabase8103CA (private)
+**GitHub repository:** https://github.com/mckostas247-art/Alade_Olayode_0313301905859 (private)
 
 ## Case Study: NaijaCart Retail Ltd (E-Commerce Platform)
 * **Organisation Name:** NaijaCart Retail Ltd (a simulated Nigerian multi-category online retail platform headquartered in Lagos, serving customers nationwide).
