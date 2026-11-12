@@ -1,0 +1,73 @@
+-- Tables
+          List of relations
+ Schema |    Name     | Type  | Owner 
+--------+-------------+-------+-------
+ public | addresses   | table | shop
+ public | categories  | table | shop
+ public | customers   | table | shop
+ public | deliveries  | table | shop
+ public | inventory   | table | shop
+ public | order_items | table | shop
+ public | orders      | table | shop
+ public | payments    | table | shop
+ public | products    | table | shop
+(9 rows)
+
+-- Named constraints
+           constraint           |  on_table   |                                                      definition                                                      
+--------------------------------+-------------+----------------------------------------------------------------------------------------------------------------------
+ customers_pkey                 | customers   | PRIMARY KEY (customer_id)
+ uq_customers_email             | customers   | UNIQUE (email)
+ addresses_pkey                 | addresses   | PRIMARY KEY (address_id)
+ fk_addresses_customer          | addresses   | FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE
+ categories_pkey                | categories  | PRIMARY KEY (category_id)
+ fk_categories_parent           | categories  | FOREIGN KEY (parent_id) REFERENCES categories(category_id) ON DELETE SET NULL
+ uq_categories_name             | categories  | UNIQUE (name)
+ chk_products_price_positive    | products    | CHECK ((price > (0)::numeric))
+ fk_products_category           | products    | FOREIGN KEY (category_id) REFERENCES categories(category_id) ON DELETE RESTRICT
+ products_pkey                  | products    | PRIMARY KEY (product_id)
+ uq_products_sku                | products    | UNIQUE (sku)
+ chk_inventory_qty_nonnegative  | inventory   | CHECK ((quantity >= 0))
+ fk_inventory_product           | inventory   | FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
+ inventory_pkey                 | inventory   | PRIMARY KEY (product_id)
+ chk_orders_status              | orders      | CHECK ((status = ANY (ARRAY['PENDING'::text, 'PAID'::text, 'SHIPPED'::text, 'DELIVERED'::text, 'CANCELLED'::text])))
+ chk_orders_total_nonnegative   | orders      | CHECK ((total >= (0)::numeric))
+ fk_orders_customer             | orders      | FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE RESTRICT
+ orders_pkey                    | orders      | PRIMARY KEY (order_id)
+ chk_order_items_price_positive | order_items | CHECK ((unit_price > (0)::numeric))
+ chk_order_items_qty_positive   | order_items | CHECK ((quantity > 0))
+ fk_order_items_order           | order_items | FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE
+ fk_order_items_product         | order_items | FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE RESTRICT
+ order_items_pkey               | order_items | PRIMARY KEY (order_id, product_id)
+ chk_payments_amount_positive   | payments    | CHECK ((amount > (0)::numeric))
+ chk_payments_method            | payments    | CHECK ((method = ANY (ARRAY['CARD'::text, 'BANK_TRANSFER'::text, 'WALLET'::text])))
+ chk_payments_status            | payments    | CHECK ((status = ANY (ARRAY['INITIATED'::text, 'SUCCESS'::text, 'FAILED'::text, 'REVERSED'::text])))
+ fk_payments_order              | payments    | FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE RESTRICT
+ payments_pkey                  | payments    | PRIMARY KEY (payment_id)
+ chk_deliveries_status          | deliveries  | CHECK ((status = ANY (ARRAY['PREPARING'::text, 'IN_TRANSIT'::text, 'DELIVERED'::text, 'FAILED'::text])))
+ deliveries_pkey                | deliveries  | PRIMARY KEY (delivery_id)
+ fk_deliveries_address          | deliveries  | FOREIGN KEY (address_id) REFERENCES addresses(address_id) ON DELETE RESTRICT
+ fk_deliveries_order            | deliveries  | FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE
+ uq_deliveries_order            | deliveries  | UNIQUE (order_id)
+ uq_deliveries_tracking         | deliveries  | UNIQUE (tracking_number)
+(34 rows)
+
+-- Partial unique index
+                                   Table "public.addresses"
+   Column    |           Type           | Collation | Nullable |           Default            
+-------------+--------------------------+-----------+----------+------------------------------
+ address_id  | bigint                   |           | not null | generated always as identity
+ customer_id | bigint                   |           | not null | 
+ street      | text                     |           | not null | 
+ city        | text                     |           | not null | 
+ state       | text                     |           | not null | 
+ is_default  | boolean                  |           | not null | false
+ created_at  | timestamp with time zone |           | not null | now()
+Indexes:
+    "addresses_pkey" PRIMARY KEY, btree (address_id)
+    "idx_addresses_one_default_per_customer" UNIQUE, btree (customer_id) WHERE is_default = true
+Foreign-key constraints:
+    "fk_addresses_customer" FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE
+Referenced by:
+    TABLE "deliveries" CONSTRAINT "fk_deliveries_address" FOREIGN KEY (address_id) REFERENCES addresses(address_id) ON DELETE RESTRICT
+

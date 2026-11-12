@@ -1,6 +1,3 @@
-### 1. `portfolio-2-query-optimisation/seed-data.sql`
-*(Fixes Lab 2 Bug #2: cleanly resets sequences and populates all parent and child tables to 50k customers, 500k orders, and ~1.5M order items.)*
-```sql
 -- MIT 8103 Portfolio 2: High-Volume Synthetic Seed Data
 -- Resets tables and generates 50,000 customers, 200 products, 500,000 orders, ~1.5M order_items
 

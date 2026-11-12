@@ -1,0 +1,66 @@
+== Demo A: no lock, absolute write (quantity = 0). Stock 1. 2026-11-12 07:16
+== Session 1
+begin;
+BEGIN
+select 'SX reads' as step, clock_timestamp()::time(2) as at, quantity from inventory where product_id = 1;
+   step   |     at      | quantity 
+----------+-------------+----------
+ SX reads | 06:16:32.78 |        1
+(1 row)
+
+select pg_sleep(3);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+update inventory set quantity = 0 where product_id = 1;
+UPDATE 1
+insert into orders (customer_id, status, total) values (3, 'PAID', 485000.00) returning order_id;
+ order_id 
+----------
+   500003
+(1 row)
+
+INSERT 0 1
+select 'SX committing' as step, clock_timestamp()::time(2) as at;
+     step      |     at     
+---------------+------------
+ SX committing | 06:16:35.8
+(1 row)
+
+commit;
+COMMIT
+== Session 2
+begin;
+BEGIN
+select 'SX reads' as step, clock_timestamp()::time(2) as at, quantity from inventory where product_id = 1;
+   step   |     at      | quantity 
+----------+-------------+----------
+ SX reads | 06:16:33.81 |        1
+(1 row)
+
+select pg_sleep(3);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+update inventory set quantity = 0 where product_id = 1;
+UPDATE 1
+insert into orders (customer_id, status, total) values (4, 'PAID', 485000.00) returning order_id;
+ order_id 
+----------
+   500004
+(1 row)
+
+INSERT 0 1
+select 'SX committing' as step, clock_timestamp()::time(2) as at;
+     step      |     at      
+---------------+-------------
+ SX committing | 06:16:36.82
+(1 row)
+
+commit;
+COMMIT
+== After both: new orders created, stock left = 2 0

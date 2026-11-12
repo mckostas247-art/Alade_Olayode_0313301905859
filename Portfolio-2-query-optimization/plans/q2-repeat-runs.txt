@@ -1,0 +1,13 @@
+-- Query 2 repeated runs, 2026-11-12 07:14. Five runs with idx_orders_placed_at, five with it dropped inside a rolled-back transaction.
+-- with index:
+Execution Time: 200.108 ms
+Execution Time: 238.766 ms
+Execution Time: 269.371 ms
+Execution Time: 316.489 ms
+Execution Time: 280.059 ms
+-- without index:
+Execution Time: 335.710 ms
+Execution Time: 399.303 ms
+Execution Time: 808.565 ms
+Execution Time: 463.599 ms
+Execution Time: 304.276 ms

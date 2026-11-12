@@ -1,0 +1,43 @@
+                                                                            QUERY PLAN                                                                             
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=10062.82..10062.83 rows=5 width=40) (actual time=32.411..38.212 rows=4 loops=1)
+   Buffers: shared hit=4901
+   ->  Sort  (cost=10062.82..10062.83 rows=5 width=40) (actual time=32.409..38.208 rows=4 loops=1)
+         Sort Key: o.placed_at DESC
+         Sort Method: quicksort  Memory: 25kB
+         Buffers: shared hit=4901
+         ->  Finalize GroupAggregate  (cost=10061.41..10062.76 rows=5 width=40) (actual time=32.349..38.152 rows=4 loops=1)
+               Group Key: o.order_id
+               Buffers: shared hit=4898
+               ->  Gather Merge  (cost=10061.41..10062.66 rows=10 width=40) (actual time=32.340..38.138 rows=4 loops=1)
+                     Workers Planned: 2
+                     Workers Launched: 2
+                     Buffers: shared hit=4898
+                     ->  Partial GroupAggregate  (cost=9061.39..9061.48 rows=5 width=40) (actual time=21.964..21.967 rows=1 loops=3)
+                           Group Key: o.order_id
+                           Buffers: shared hit=4898
+                           ->  Sort  (cost=9061.39..9061.40 rows=6 width=40) (actual time=21.951..21.954 rows=5 loops=3)
+                                 Sort Key: o.order_id
+                                 Sort Method: quicksort  Memory: 25kB
+                                 Buffers: shared hit=4898
+                                 Worker 0:  Sort Method: quicksort  Memory: 25kB
+                                 Worker 1:  Sort Method: quicksort  Memory: 25kB
+                                 ->  Nested Loop Left Join  (cost=4.46..9061.31 rows=6 width=40) (actual time=5.444..21.882 rows=5 loops=3)
+                                       Buffers: shared hit=4882
+                                       ->  Parallel Seq Scan on orders o  (cost=0.00..9020.67 rows=2 width=32) (actual time=5.361..21.741 rows=1 loops=3)
+                                             Filter: ((customer_id = 1042) AND (placed_at >= (now() - '180 days'::interval)))
+                                             Rows Removed by Filter: 166665
+                                             Buffers: shared hit=4854
+                                       ->  Bitmap Heap Scan on order_items oi  (cost=4.46..20.28 rows=4 width=16) (actual time=0.071..0.085 rows=4 loops=4)
+                                             Recheck Cond: (order_id = o.order_id)
+                                             Heap Blocks: exact=6
+                                             Buffers: shared hit=28
+                                             ->  Bitmap Index Scan on order_items_pkey  (cost=0.00..4.46 rows=4 width=0) (actual time=0.046..0.047 rows=4 loops=4)
+                                                   Index Cond: (order_id = o.order_id)
+                                                   Buffers: shared hit=14
+ Planning:
+   Buffers: shared hit=164
+ Planning Time: 2.461 ms
+ Execution Time: 38.484 ms
+(39 rows)
+

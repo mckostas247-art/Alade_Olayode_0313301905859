@@ -1,6 +1,6 @@
 services:
   primary:
-    image: bitnami/postgresql:17
+    image: bitnamilegacy/postgresql:17
     container_name: shop-pg-primary
     environment:
       POSTGRESQL_REPLICATION_MODE: master
@@ -9,11 +9,12 @@ services:
       POSTGRESQL_USERNAME: shop
       POSTGRESQL_PASSWORD: shop
       POSTGRESQL_DATABASE: shop
+      POSTGRESQL_POSTGRES_PASSWORD: postgrespass
     ports:
       - "5433:5432"
 
   replica:
-    image: bitnami/postgresql:17
+    image: bitnamilegacy/postgresql:17
     container_name: shop-pg-replica
     depends_on:
       - primary

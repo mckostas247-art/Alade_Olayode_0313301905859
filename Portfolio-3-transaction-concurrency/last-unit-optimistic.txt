@@ -1,0 +1,31 @@
+== Demo C: optimistic locking, both read version 0, update WHERE version = 0. Stock 1.
+== Session 1
+select 'SX reads' as step, quantity, version from inventory where product_id = 1;
+   step   | quantity | version 
+----------+----------+---------
+ SX reads |        1 |       0
+(1 row)
+
+select pg_sleep(1);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+update inventory set quantity = quantity - 1, version = version + 1 where product_id = 1 and version = 0;
+UPDATE 1
+== Session 2
+select 'SX reads' as step, quantity, version from inventory where product_id = 1;
+   step   | quantity | version 
+----------+----------+---------
+ SX reads |        0 |       1
+(1 row)
+
+select pg_sleep(3);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+update inventory set quantity = quantity - 1, version = version + 1 where product_id = 1 and version = 0;
+UPDATE 0

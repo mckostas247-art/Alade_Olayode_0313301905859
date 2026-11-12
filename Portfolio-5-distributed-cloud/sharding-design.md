@@ -1,5 +1,3 @@
-### 3. `portfolio-5-distributed-cloud/sharding-design.md`
-```markdown
 # Distributed Architecture & Sharding Design for NaijaCart Retail Ltd
 
 ## 1. Horizontal Sharding Strategy

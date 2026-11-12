@@ -1,5 +1,3 @@
-### 1. `portfolio-1-database-design/schema.sql`
-```sql
 -- MIT 8103 Portfolio 1: Relational Schema for NaijaCart Retail Ltd
 -- Target Engine: PostgreSQL 17
 

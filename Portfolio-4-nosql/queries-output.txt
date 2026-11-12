@@ -1,0 +1,149 @@
+shop> 
+shop> 
+shop> 
+--- 1. Filter by Category and Polymorphic Nested Attribute (Phones with RAM >= 8GB) ---
+
+shop> | | | | | [
+  {
+    sku: 'PHN-005',
+    name: 'iPhone 16 128GB',
+    price: 1420000,
+    attributes: {
+      brand: 'Apple',
+      ramGb: 8
+    }
+  },
+  {
+    sku: 'PHN-003',
+    name: 'Infinix Note 40 Pro Wireless Edition',
+    price: 365000,
+    attributes: {
+      brand: 'Infinix',
+      ramGb: 8
+    }
+  },
+  {
+    sku: 'PHN-001',
+    name: 'Samsung Galaxy A55 5G',
+    price: 485000,
+    attributes: {
+      brand: 'Samsung',
+      ramGb: 8
+    }
+  },
+  {
+    sku: 'PHN-002',
+    name: 'Samsung Galaxy S24 Ultra',
+    price: 1650000,
+    attributes: {
+      brand: 'Samsung',
+      ramGb: 12
+    }
+  },
+  {
+    sku: 'PHN-004',
+    name: 'Tecno Camon 30 Premier',
+    price: 590000,
+    attributes: {
+      brand: 'Tecno',
+      ramGb: 12
+    }
+  },
+  {
+    sku: 'PHN-007',
+    name: 'Xiaomi POCO X6 Pro',
+    price: 470000,
+    attributes: {
+      brand: 'Xiaomi',
+      ramGb: 12
+    }
+  }
+]
+
+shop> 
+shop> 
+--- 2. Full-Text Search on Product Name ('wireless') ---
+
+shop> | | | | | [
+  {
+    sku: 'AUD-002',
+    name: 'Oraimo FreePods 4 Wireless Earbuds',
+    category: 'computing',
+    price: 38000
+  },
+  {
+    sku: 'LAP-005',
+    name: 'Logitech MX Master 3S Wireless Mouse',
+    category: 'computing',
+    price: 135000
+  },
+  {
+    sku: 'PHN-003',
+    name: 'Infinix Note 40 Pro Wireless Edition',
+    category: 'phones',
+    price: 365000
+  },
+  {
+    sku: 'AUD-001',
+    name: 'Sony WH-1000XM5 Wireless Noise Cancelling Headphones',
+    category: 'computing',
+    price: 460000
+  }
+]
+
+shop> 
+shop> 
+--- 3. Aggregation Pipeline: Average Customer Rating & Review Count per Category ---
+
+shop> | | | | | | | | | | | | | [
+  {
+    _id: 'computing',
+    reviewCount: 7,
+    avgRating: 4.71
+  },
+  {
+    _id: 'phones',
+    reviewCount: 9,
+    avgRating: 4.44
+  },
+  {
+    _id: 'fashion',
+    reviewCount: 6,
+    avgRating: 4.17
+  }
+]
+
+shop> 
+shop> 
+--- 4. Verify Index Usage on { category: 1, 'attributes.brand': 1 } ---
+
+shop> | | {
+  stage: 'FETCH',
+  inputStage: {
+    stage: 'IXSCAN',
+    keyPattern: {
+      category: 1,
+      'attributes.brand': 1
+    },
+    indexName: 'category_1_attributes.brand_1',
+    isMultiKey: false,
+    multiKeyPaths: {
+      category: [],
+      'attributes.brand': []
+    },
+    isUnique: false,
+    isSparse: false,
+    isPartial: false,
+    indexVersion: 2,
+    direction: 'forward',
+    indexBounds: {
+      category: [
+        '["phones", "phones"]'
+      ],
+      'attributes.brand': [
+        '["Samsung", "Samsung"]'
+      ]
+    }
+  }
+}
+

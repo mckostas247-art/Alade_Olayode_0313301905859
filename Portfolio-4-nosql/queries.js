@@ -24,9 +24,10 @@ printjson(
       $group: {
         _id: "$category",
         reviewCount: { $sum: 1 },
-        avgRating: { $round: [{ $avg: "$reviews.rating" }, 2] }
+        avgRating: { $avg: "$reviews.rating" }
       }
     },
+    { $set: { avgRating: { $round: ["$avgRating", 2] } } },
     { $sort: { avgRating: -1 } }
   ]).toArray()
 );

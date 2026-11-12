@@ -1,0 +1,26 @@
+== Replication demo, 2026-11-12 07:26. Primary on host port 5433, replica on 5434. Image bitnamilegacy/postgresql:17.
+== 1. Load schema and sample data on the PRIMARY
+== 2. pg_stat_replication on the PRIMARY (queried as superuser)
+ client_addr | application_name |   state   | sync_state | sent_lsn  | replay_lsn |   replay_lag    
+-------------+------------------+-----------+------------+-----------+------------+-----------------
+ 172.19.0.3  | walreceiver      | streaming | async      | 0/306D818 | 0/306D818  | 00:00:00.003867
+(1 row)
+
+== 3. Is each node in recovery (read-only standby)?
+primary: f
+replica: t
+== 4. Insert order 6 on the PRIMARY
+ order_id | status |   total   |  written_at  
+----------+--------+-----------+--------------
+        6 | PAID   | 125000.00 | 06:26:27.542
+(1 row)
+
+INSERT 0 1
+== 5. Read order 6 on the REPLICA one second later
+ order_id | status |   total   |   read_at    
+----------+--------+-----------+--------------
+        6 | PAID   | 125000.00 | 06:26:30.197
+(1 row)
+
+== 6. Try to write on the REPLICA
+ERROR:  cannot execute INSERT in a read-only transaction

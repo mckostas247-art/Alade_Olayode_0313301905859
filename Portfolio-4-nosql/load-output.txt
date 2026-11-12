@@ -1,0 +1,37 @@
+shop> 
+shop> 
+shop> true
+shop> 
+shop> | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | {
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6af55aff352cfd77620a0b01'),
+    '1': ObjectId('6af55aff352cfd77620a0b02'),
+    '2': ObjectId('6af55aff352cfd77620a0b03'),
+    '3': ObjectId('6af55aff352cfd77620a0b04'),
+    '4': ObjectId('6af55aff352cfd77620a0b05'),
+    '5': ObjectId('6af55aff352cfd77620a0b06'),
+    '6': ObjectId('6af55aff352cfd77620a0b07'),
+    '7': ObjectId('6af55aff352cfd77620a0b08'),
+    '8': ObjectId('6af55aff352cfd77620a0b09'),
+    '9': ObjectId('6af55aff352cfd77620a0b0a'),
+    '10': ObjectId('6af55aff352cfd77620a0b0b'),
+    '11': ObjectId('6af55aff352cfd77620a0b0c'),
+    '12': ObjectId('6af55aff352cfd77620a0b0d'),
+    '13': ObjectId('6af55aff352cfd77620a0b0e'),
+    '14': ObjectId('6af55aff352cfd77620a0b0f'),
+    '15': ObjectId('6af55aff352cfd77620a0b10'),
+    '16': ObjectId('6af55aff352cfd77620a0b11'),
+    '17': ObjectId('6af55aff352cfd77620a0b12'),
+    '18': ObjectId('6af55aff352cfd77620a0b13'),
+    '19': ObjectId('6af55aff352cfd77620a0b14'),
+    '20': ObjectId('6af55aff352cfd77620a0b15')
+  }
+}
+shop> 
+shop> 
+shop> category_1_attributes.brand_1
+shop> name_text
+shop> 
+shop> Inserted documents count: 21
+

@@ -1,0 +1,40 @@
+== Demo B: no lock, relative write (quantity - 1). Stock 1.
+== Session 1
+begin;
+BEGIN
+select 'SX reads' as step, quantity from inventory where product_id = 1;
+   step   | quantity 
+----------+----------
+ SX reads |        1
+(1 row)
+
+select pg_sleep(3);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+update inventory set quantity = quantity - 1 where product_id = 1;
+UPDATE 1
+commit;
+COMMIT
+== Session 2
+begin;
+BEGIN
+select 'SX reads' as step, quantity from inventory where product_id = 1;
+   step   | quantity 
+----------+----------
+ SX reads |        1
+(1 row)
+
+select pg_sleep(3);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+update inventory set quantity = quantity - 1 where product_id = 1;
+ERROR:  new row for relation "inventory" violates check constraint "chk_inventory_qty_nonnegative"
+DETAIL:  Failing row contains (1, -1, 0, 2026-11-12 06:15:35.568777+00).
+commit;
+ROLLBACK

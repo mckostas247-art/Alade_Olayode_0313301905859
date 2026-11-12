@@ -1,0 +1,32 @@
+                                                           QUERY PLAN                                                           
+--------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=11.71..11.74 rows=13 width=49) (actual time=0.232..0.235 rows=15 loops=1)
+   Sort Key: i.quantity, p.product_id
+   Sort Method: quicksort  Memory: 26kB
+   Buffers: shared hit=12
+   ->  Hash Join  (cost=5.89..11.47 rows=13 width=49) (actual time=0.110..0.162 rows=15 loops=1)
+         Hash Cond: (p.category_id = c.category_id)
+         Buffers: shared hit=6
+         ->  Hash Join  (cost=4.66..10.20 rows=13 width=46) (actual time=0.058..0.106 rows=15 loops=1)
+               Hash Cond: (p.product_id = i.product_id)
+               Buffers: shared hit=5
+               ->  Seq Scan on products p  (cost=0.00..5.00 rows=200 width=42) (actual time=0.004..0.023 rows=200 loops=1)
+                     Buffers: shared hit=3
+               ->  Hash  (cost=4.50..4.50 rows=13 width=12) (actual time=0.034..0.035 rows=15 loops=1)
+                     Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                     Buffers: shared hit=2
+                     ->  Seq Scan on inventory i  (cost=0.00..4.50 rows=13 width=12) (actual time=0.006..0.021 rows=15 loops=1)
+                           Filter: (quantity < 15)
+                           Rows Removed by Filter: 185
+                           Buffers: shared hit=2
+         ->  Hash  (cost=1.10..1.10 rows=10 width=19) (actual time=0.026..0.026 rows=10 loops=1)
+               Buckets: 1024  Batches: 1  Memory Usage: 9kB
+               Buffers: shared hit=1
+               ->  Seq Scan on categories c  (cost=0.00..1.10 rows=10 width=19) (actual time=0.014..0.016 rows=10 loops=1)
+                     Buffers: shared hit=1
+ Planning:
+   Buffers: shared hit=198
+ Planning Time: 2.640 ms
+ Execution Time: 0.412 ms
+(28 rows)
+

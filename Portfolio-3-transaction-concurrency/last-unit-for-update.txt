@@ -1,0 +1,44 @@
+== Demo: SELECT ... FOR UPDATE on the last unit, 2026-11-12 07:16. Stock set to 1 first.
+== Session 1
+begin;
+BEGIN
+select 'S1 locked' as step, clock_timestamp()::time(2) as at, quantity from inventory where product_id = 1 for update;
+   step    |     at      | quantity 
+-----------+-------------+----------
+ S1 locked | 06:16:05.74 |        1
+(1 row)
+
+select pg_sleep(5);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+update inventory set quantity = quantity - 1, version = version + 1 where product_id = 1;
+UPDATE 1
+select 'S1 committing' as step, clock_timestamp()::time(2) as at;
+     step      |     at      
+---------------+-------------
+ S1 committing | 06:16:10.75
+(1 row)
+
+commit;
+COMMIT
+
+== Session 2 (started 1.5 s after Session 1)
+begin;
+BEGIN
+select 'S2 asks for lock' as step, clock_timestamp()::time(2) as at;
+       step       |     at      
+------------------+-------------
+ S2 asks for lock | 06:16:08.11
+(1 row)
+
+select 'S2 got lock' as step, clock_timestamp()::time(2) as at, quantity from inventory where product_id = 1 for update;
+    step     |     at      | quantity 
+-------------+-------------+----------
+ S2 got lock | 06:16:10.75 |        0
+(1 row)
+
+rollback;
+ROLLBACK

@@ -1,0 +1,25 @@
+-- Constraint tests, run 2026-11-12 07:06 WCAST against postgres:17-alpine
+
+shop=# insert into products (sku,name,category_id,price) values ('TEST-0','zero price',1,0);
+ERROR:  new row for relation "products" violates check constraint "chk_products_price_positive"
+DETAIL:  Failing row contains (6, TEST-0, zero price, 1, 0.00, 2026-11-12 06:06:59.741609+00).
+
+shop=# insert into order_items (order_id,product_id,quantity,unit_price) values (1,999,1,10);
+ERROR:  insert or update on table "order_items" violates foreign key constraint "fk_order_items_product"
+DETAIL:  Key (product_id)=(999) is not present in table "products".
+
+shop=# insert into customers (full_name,email) values ('Dup','adebayo.o@example.ng');
+ERROR:  duplicate key value violates unique constraint "uq_customers_email"
+DETAIL:  Key (email)=(adebayo.o@example.ng) already exists.
+
+shop=# insert into inventory (product_id,quantity) values (1,-1) on conflict (product_id) do update set quantity = -1;
+ERROR:  new row for relation "inventory" violates check constraint "chk_inventory_qty_nonnegative"
+DETAIL:  Failing row contains (1, -1, 0, 2026-11-12 06:07:07.646537+00).
+
+shop=# insert into addresses (customer_id,street,city,state,is_default) values (1,'2 Test St','Lagos','Lagos',true);
+ERROR:  duplicate key value violates unique constraint "idx_addresses_one_default_per_customer"
+DETAIL:  Key (customer_id)=(1) already exists.
+
+shop=# insert into orders (customer_id,status) values (1,'LOST');
+ERROR:  new row for relation "orders" violates check constraint "chk_orders_status"
+DETAIL:  Failing row contains (6, 1, LOST, 2026-11-12 06:07:12.101256+00, 0.00).

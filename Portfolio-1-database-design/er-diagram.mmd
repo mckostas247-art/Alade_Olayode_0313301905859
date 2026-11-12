@@ -1,0 +1,77 @@
+erDiagram
+    customers ||--o{ addresses : "has"
+    categories |o--o{ categories : "parent of"
+    categories ||--o{ products : "classifies"
+    products ||--o| inventory : "stocked as"
+    customers ||--o{ orders : "places"
+    orders ||--o{ order_items : "contains"
+    products ||--o{ order_items : "sold as"
+    orders ||--o{ payments : "paid by"
+    orders ||--o| deliveries : "shipped as"
+    addresses ||--o{ deliveries : "delivered to"
+    addresses {
+        bigint address_id PK
+        bigint customer_id FK
+        text street
+        text city
+        text state
+        boolean is_default
+        timestamptz created_at
+    }
+    categories {
+        bigint category_id PK
+        text name UK
+        bigint parent_id FK
+    }
+    customers {
+        bigint customer_id PK
+        text full_name
+        text email UK
+        text phone
+        text region
+        timestamptz created_at
+    }
+    deliveries {
+        bigint delivery_id PK
+        bigint order_id FK, UK
+        bigint address_id FK
+        text tracking_number UK
+        text status
+        timestamptz dispatched_at
+        timestamptz delivered_at
+    }
+    inventory {
+        bigint product_id PK, FK
+        integer quantity
+        integer version
+        timestamptz updated_at
+    }
+    order_items {
+        bigint order_id PK, FK
+        bigint product_id PK, FK
+        integer quantity
+        numeric unit_price
+    }
+    orders {
+        bigint order_id PK
+        bigint customer_id FK
+        text status
+        timestamptz placed_at
+        numeric total
+    }
+    payments {
+        bigint payment_id PK
+        bigint order_id FK
+        numeric amount
+        text method
+        text status
+        timestamptz paid_at
+    }
+    products {
+        bigint product_id PK
+        text sku UK
+        text name
+        bigint category_id FK
+        numeric price
+        timestamptz created_at
+    }

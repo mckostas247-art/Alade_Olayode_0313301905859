@@ -1,0 +1,76 @@
+== READ COMMITTED: stock set to 10, Session 2 changes it to 8 mid-transaction. 2026-11-12 07:17
+== Session 1
+begin isolation level READ COMMITTED;
+BEGIN
+select 'S1 first read' as step, quantity from inventory where product_id = 1;
+     step      | quantity 
+---------------+----------
+ S1 first read |       10
+(1 row)
+
+select pg_sleep(3);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+select 'S1 second read' as step, quantity from inventory where product_id = 1;
+      step      | quantity 
+----------------+----------
+ S1 second read |        8
+(1 row)
+
+commit;
+COMMIT
+== Session 2
+begin;
+BEGIN
+update inventory set quantity = 8 where product_id = 1;
+UPDATE 1
+commit;
+COMMIT
+select 'S2 committed' as step, quantity from inventory where product_id = 1;
+     step     | quantity 
+--------------+----------
+ S2 committed |        8
+(1 row)
+
+
+== REPEATABLE READ: stock set to 8, Session 2 changes it to 5 mid-transaction. 2026-11-12 07:17
+== Session 1
+begin isolation level REPEATABLE READ;
+BEGIN
+select 'S1 first read' as step, quantity from inventory where product_id = 1;
+     step      | quantity 
+---------------+----------
+ S1 first read |        8
+(1 row)
+
+select pg_sleep(3);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+select 'S1 second read' as step, quantity from inventory where product_id = 1;
+      step      | quantity 
+----------------+----------
+ S1 second read |        8
+(1 row)
+
+commit;
+COMMIT
+== Session 2
+begin;
+BEGIN
+update inventory set quantity = 5 where product_id = 1;
+UPDATE 1
+commit;
+COMMIT
+select 'S2 committed' as step, quantity from inventory where product_id = 1;
+     step     | quantity 
+--------------+----------
+ S2 committed |        5
+(1 row)
+
+

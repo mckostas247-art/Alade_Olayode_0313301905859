@@ -1,0 +1,19 @@
+ product_id |   sku    |    name    | category_name | stock_on_hand |   price   
+------------+----------+------------+---------------+---------------+-----------
+         10 | SKU-0010 | Product 10 | Category 10   |             0 | 425000.00
+          1 | SKU-0001 | Product 1  | Category 1    |             1 | 142000.00
+         11 | SKU-0011 | Product 11 | Category 1    |             1 | 562000.00
+          2 | SKU-0002 | Product 2  | Category 2    |             2 | 279000.00
+         12 | SKU-0012 | Product 12 | Category 2    |             2 | 699000.00
+          3 | SKU-0003 | Product 3  | Category 3    |             3 | 416000.00
+         13 | SKU-0013 | Product 13 | Category 3    |             3 | 836000.00
+          4 | SKU-0004 | Product 4  | Category 4    |             4 | 553000.00
+         14 | SKU-0014 | Product 14 | Category 4    |             4 |  23000.00
+          5 | SKU-0005 | Product 5  | Category 5    |             5 | 690000.00
+         15 | SKU-0015 | Product 15 | Category 5    |             5 | 160000.00
+          6 | SKU-0006 | Product 6  | Category 6    |             6 | 827000.00
+          7 | SKU-0007 | Product 7  | Category 7    |             7 |  14000.00
+          8 | SKU-0008 | Product 8  | Category 8    |             8 | 151000.00
+          9 | SKU-0009 | Product 9  | Category 9    |             9 | 288000.00
+(15 rows)
+
