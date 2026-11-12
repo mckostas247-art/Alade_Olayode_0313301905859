@@ -31,11 +31,11 @@
 <table class="meta">
 <tr><td><b>Student</b></td><td>Olayode Alade</td><td><b>Matric number</b></td><td>0313301905859</td></tr>
 <tr><td><b>Email</b></td><td>o.alade5859@miva.edu.ng</td><td><b>Date</b></td><td>November 2026</td></tr>
-<tr><td><b>Repository</b></td><td colspan="3">https://github.com/mckostas247-art/AdvancedDatabase8103CA (private; assessor access: <span class="todo">[assessor GitHub handle added as collaborator / access on request]</span>)</td></tr>
+<tr><td><b>Repository</b></td><td colspan="3">https://github.com/mckostas247-art/AdvancedDatabase8103CA</td></tr>
 </table>
 
 <h2>1. Selected case study: NaijaCart Retail Ltd (e-commerce platform)</h2>
-<p>NaijaCart Retail Ltd is a simulated Nigerian online retailer, based in Lagos and delivering nationwide. I chose the brief's e-commerce case and used it for all five activities. The database serves customers (browsing, ordering, paying, tracking deliveries), warehouse staff (stock and dispatch), the finance team (payment reconciliation and reversals) and the web application backend. It stores customers, addresses, a category hierarchy, products, inventory, orders, order lines, payments and deliveries in PostgreSQL 17, and a flexible product catalogue in MongoDB 7. Everything runs in Docker, so every result below can be reproduced from the repository.</p>
+<p>NaijaCart Retail Ltd is a fictitious Nigerian online retailer, based in Lagos and delivering nationwide. I chose the brief's e-commerce case and used it for all five activities. The database serves customers (browsing, ordering, paying, tracking deliveries), warehouse staff (stock and dispatch), the finance team (payment reconciliation and reversals) and the web application backend. It stores customers, addresses, a category hierarchy, products, inventory, orders, order lines, payments and deliveries in PostgreSQL 17, and a flexible product catalogue in MongoDB 7.</p>
 
 <h2>2. The five portfolio activities</h2>
 <table>
@@ -62,12 +62,12 @@
 <figcaption>Figure 1. ER diagram generated from the live PostgreSQL schema (<code>Portfolio-1-database-design/er-diagram.png</code>).</figcaption>
 </figure>
 
-<p><b>Screenshots and evidence.</b> Each portfolio folder has a <code>README.md</code> explaining how the activity was implemented and tested, the raw output files (<code>results/</code>, <code>plans/</code>, transcripts) and a <code>screenshots/</code> folder with 22 images. The images are the captured terminal output rendered to PNG; each image's title bar names the output file it shows.</p>
+<p><b>Screenshots and evidence.</b> Each portfolio folder has a <code>README.md</code> explaining how the activity was implemented and tested, the raw output files (<code>results/</code>, <code>plans/</code>, transcripts) and a <code>screenshots/</code> folder with 22 images.</p>
 
 <h2>3. Individual technical reflection</h2>
 <p><b>Design choices.</b> I kept money in <code>NUMERIC(12,2)</code> and stock rules in the database rather than only in application code, and the concurrency tests justified that: in the race where the application logic was wrong, the <code>quantity &gt;= 0</code> constraint was the only thing that stopped an oversell. For the catalogue I used MongoDB only where the data really varies (product attributes and reviews), and kept everything financial in PostgreSQL.</p>
 <p><b>Challenges.</b> The large seed first failed because my C: drive ran out of space and Docker's disk became read-only; I had to free space and restart Docker before any measurement was possible. My first Query 2 index did not give the improvement I expected, and the plans showed why: the index found the right orders but they were spread over almost every page, and most of the cost was the full scan of order lines. A covering index was ignored by the planner. The bitnami PostgreSQL images had been withdrawn from Docker Hub, so the replica setup needed the legacy image and a superuser password. My MongoDB aggregation failed because <code>$round</code> cannot be used inside <code>$group</code>. My first optimistic-locking run was not a genuine race, so I re-ran it until both sessions had read the same version.</p>
-<p><b>Lessons learned.</b> Measure, then repeat the measurement: single timings for Query 2 varied more than the effect I was testing. An index only helps if it avoids reading most of the table, and that depends on how the data is physically laid out, which <code>pg_stats.correlation</code> shows. For dashboard-style aggregates, a pre-aggregated summary beats indexing, at the cost of freshness. Failover is not free: committed-but-unshipped transactions can be lost under asynchronous replication, and IDs can have gaps. In my day job I work with production databases, and these are the habits I will take back: reading buffers as well as time in plans, testing races with two real sessions, and rehearsing failover before it is needed.</p>
+<p><b>Lessons learned.</b> Measure, then repeat the measurement: single timings for Query 2 varied more than the effect I was testing. An index only helps if it avoids reading most of the table, and that depends on how the data is physically laid out, which <code>pg_stats.correlation</code> shows. For dashboard-style aggregates, a pre-aggregated summary beats indexing, at the cost of freshness. Failover is not free: committed-but-unshipped transactions can be lost under asynchronous replication, and IDs can have gaps.</p>
 
 <h2>4. References</h2>
 <div class="refs">
@@ -84,7 +84,7 @@
 <h2>5. AI use declaration</h2>
 <table>
 <tr><th style="width:20%">Tool</th><th>What it was used for</th></tr>
-<tr><td><span class="todo">[name of the AI tool used for the first drafts]</span></td><td>Generating first drafts of the SQL scripts, MongoDB scripts and portfolio READMEs.</td></tr>
+<tr><td>Gemini</td><td>Generating first drafts of the SQL scripts, MongoDB scripts and portfolio READMEs.</td></tr>
 <tr><td>Claude (Anthropic), through Claude Code</td><td>Running all five activities on my machine in Docker and capturing the output; finding and fixing errors (formatting left in the SQL files, the <code>$round</code> aggregation bug, the withdrawn replica image); running the Query 2 index experiments, the durability test and the failover test; generating the ER diagram and rendering the output files as screenshots; rewriting the README files for all five activities from the real results, and drafting this document.</td></tr>
 </table>
 <p><b>How I reviewed and verified the output.</b> I ran the repository's commands myself and checked that the figures in each README and in this document match the output files in the repository (<code>plans/</code>, <code>results/</code> and the transcripts). I corrected statements that the real runs contradicted, such as the earlier estimated timings, and I have read every section so that I can explain the design, the results and the trade-offs if selected for verification. I remain responsible for the accuracy of this submission.</p>

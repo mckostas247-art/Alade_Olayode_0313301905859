@@ -2,7 +2,9 @@
 **Student Name:** Olayode Alade  
 **Student ID:** 2026/A/MIT/0313301905859
 **Institution:** Miva Open University · School of Postgraduate Studies  
-**Session:** 2026/2027 Academic Session (First Semester — September 2026 Cohort)
+**Session:** 2026/2027 Academic Session (First Semester — September 2026 Cohort)  
+**Email:** o.alade5859@miva.edu.ng  
+**GitHub repository:** https://github.com/mckostas247-art/AdvancedDatabase8103CA (private)
 
 ## Case Study: NaijaCart Retail Ltd (E-Commerce Platform)
 * **Organisation Name:** NaijaCart Retail Ltd (a simulated Nigerian multi-category online retail platform headquartered in Lagos, serving customers nationwide).
@@ -89,7 +91,7 @@ AdvancedDatabase8103CA/
 │   ├── sharding-design.md
 │   └── screenshots/  (2 PNG, captured output)
 └── final-documentation/
-    ├── Alade_Olayode_0313301905859_MIT8103.pdf
+    ├── Alade_Olayode_Documentation.pdf
     ├── README.md
     └── final-document.html
 ```
@@ -104,4 +106,4 @@ docker compose exec -T db psql -U shop -d shop -v ON_ERROR_STOP=1 < Portfolio-1-
 Each portfolio folder's `README.md` gives the commands for that activity under **How I implemented it**, and the results under **How I tested it**. Portfolio 2's seed creates about 2.1 million rows and needs a few minutes and about 1 GB of free disk.
 
 ## Final documentation and AI use
-The 2–3 page summary is `final-documentation/Alade_Olayode_0313301905859_MIT8103.pdf`. Its section 5 is the AI use declaration required by the brief.
+The 2–3 page summary is `final-documentation/Alade_Olayode_Documentation.pdf`. Its section 5 is the AI use declaration required by the brief.
